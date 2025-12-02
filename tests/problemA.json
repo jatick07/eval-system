@@ -1,0 +1,8 @@
+{
+    "tests": [
+        { "input": "1 2\n", "output": "3\n" },
+        { "input": "10 5\n", "output": "15\n" },
+        { "input": "100 -50\n", "output": "50\n" }
+    ],
+    "timeout": 2
+}
