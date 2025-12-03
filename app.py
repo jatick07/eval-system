@@ -33,6 +33,13 @@ PAGE = """
     <main class="content">
         <h1>{{ problem['name'] }}</h1>
         <p>{{ problem['description'] }}</p>
+        <h3> Input: </h3>
+        <p>{{ problem['input'] }}</p>
+        <h3> Output: </h3>
+        <p>{{ problem['output'] }}</p>
+        <h3> Examples: </h3>
+        <p>{{ problem['examples'] }}</p>
+        <pre>test</pre>
 
         <form method="POST">
             <textarea name="code">{{ code or "" }}</textarea><br><br>

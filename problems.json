@@ -2,6 +2,9 @@
     {
         "id": "problemA",
         "name": "Sum Two Numbers",
-        "description": "Read two integers and output their sum."
+        "description": "Read two integers and output their sum.",
+        "input": "2 numbs",
+        "output": "sum of them",
+        "examples": "test"
     }
 ]
