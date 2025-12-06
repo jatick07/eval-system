@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <link rel="stylesheet" href="/static/style.css">
+        <title>{{ problem['name'] }} - PHS Programming Contest #1</title>
+</head>
+<body>
+    <div class="layout">
+        <div class="left-column">
+            <aside class="sidebar">
+                <h2>PHS Programming Contest #1</h2>
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                    </ul>
+                    <h3>Problems</h3>
+                    <ul>
+                        {% for pid, p in problems.items() %}
+                            <li><a href="/{{ pid }}">{{ p['name'] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </aside>
+            
+            <div class="sidebar-actions">
+                <a href="/logout" class="btn-logout">Logout</a>
+            </div>
+        </div>
+
+        <main class="content">
+            <h1>{{ problem['name'] }}</h1>
+
+            <h3> Problem Description </h3>
+            <p>{{ problem['description']|safe }}</p>
+
+            <h3> Input </h3>
+            <p>{{ problem['input']|safe }}</p>
+            
+            <h3> Output </h3>
+            <p>{{ problem['output']|safe }}</p>
+
+            <h3>Examples</h3>
+            <div class="examples-container">
+                {% for case in problem['examples'] %}
+                    <pre>Input:<br>{{ case['input'] }}<br><br>Output:<br>{{ case['output'] }}</pre>
+                {% endfor %}
+            </div>
+
+            <h3> Submit your solution </h3>
+            <div class="submission-container">
+                <form method="POST">
+                    <textarea name="code">{{ code or "" }}</textarea><br><br>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            {% if result %}
+                <h2 class="{{ 'result-accepted' if result == 'Accepted' else 'result-wrong' }}">Result: {{ result }}</h2>
+                <pre>{{ details }}</pre>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

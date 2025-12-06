@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <link rel="stylesheet" href="/static/style.css">
+        <title>PHS Programming Contest #1</title>
+</head>
+<body>
+    <div class="layout">
+        <div class="left-column">
+            <aside class="sidebar">
+                <h2>PHS Programming Contest #1</h2>
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                    </ul>
+                    <h3>Problems</h3>
+                    <ul>
+                        {% for pid, p in problems.items() %}
+                            <li><a href="/{{ pid }}">{{ p['name'] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </aside>
+            <div class="sidebar-actions">
+                <a href="/logout" class="btn-logout">Logout</a>
+            </div>
+        </div>
+        <main class="content">
+            <h1>PHS Programming Contest #1</h1>
+            <p>Select a problem from the sidebar to begin.</p>
+            <ul>
+                {% for pid, p in problems.items() %}
+                    <li><a href="/{{ pid }}">{{ p['name'] }}</a></li>
+                {% endfor %}
+            </ul>
+        </main>
+    </div>
+</body>
+</html>
