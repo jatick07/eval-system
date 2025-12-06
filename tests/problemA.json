@@ -1,8 +1,12 @@
 {
     "tests": [
-        { "input": "1 2\n", "output": "3\n" },
-        { "input": "10 5\n", "output": "15\n" },
-        { "input": "100 -50\n", "output": "50\n" }
+        { "input": "1\n", "output": "NO\n" },
+        { "input": "2\n", "output": "YES\n" },
+        { "input": "488673\n", "output": "NO\n" },
+        { "input": "374\n", "output": "YES\n" },
+        { "input": "0\n", "output": "NO\n" },
+        { "input": "12984\n", "output": "YES\n" },
+        { "input": "2395\n", "output": "NO\n" }
     ],
-    "timeout": 2
+    "timeout": 1
 }
