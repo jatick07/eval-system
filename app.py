@@ -14,7 +14,7 @@ app.secret_key = os.getenv("WEBSERVER_SECRET")
 
 # create database submissions table, and student_status table, if they doesn't exist
 cursor.execute("CREATE TABLE IF NOT EXISTS submissions (username TEXT, problem_id TEXT, status TEXT, submission_id INTEGER)")
-cursor.execute("CREATE TABLE IF NOT EXISTS student_status (username TEXT UNIQUE, problems_solved INTEGER)")
+cursor.execute("CREATE TABLE IF NOT EXISTS student_status (username TEXT UNIQUE, solved_count INTEGER, problems_solved TEXT)")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -25,7 +25,7 @@ def login():
         
         # insert name into the session and the database (ignore if it already exists)
         session["student_name"] = name.strip()
-        cursor.execute("INSERT OR IGNORE INTO student_status VALUES (?, ?)", (name.strip(), 0))
+        cursor.execute("INSERT OR IGNORE INTO student_status VALUES (?, ?, ?)", (name.strip(), 0, json.dumps([])))
         db.commit()
         return redirect("/")
 
@@ -102,12 +102,16 @@ def problem(problem_id):
         submissionId = int(time.time())
         
         # save submission to database
-        with open("submissions.log", "a") as f:
+        #with open("submissions.log", "a") as f:
             #f.write(f"{student} | {problem_id} | RESULT: {result}\n")
-            cursor.execute("INSERT INTO submissions VALUES (?, ?, ?, ?)", (student, problem_id, result, submissionId))
-            if result == "Accepted":
-                cursor.execute("UPDATE student_status SET problems_solved = problems_solved + 1 WHERE username = (?)", (student,))
-            db.commit()
+        cursor.execute("INSERT INTO submissions VALUES (?, ?, ?, ?)", (student, problem_id, result, submissionId))
+        cursor.execute("SELECT problems_solved FROM student_status WHERE username = (?)", (student,))
+        problems_solved = json.loads(cursor.fetchone()[0])
+
+        if result == "Accepted" and problem_id not in problems_solved:
+            problems_solved.append(problem_id)
+            cursor.execute("UPDATE student_status SET solved_count = solved_count + 1, problems_solved = ? WHERE username = ?", (json.dumps(problems_solved), student))
+        db.commit()
 
         # remove temp file
         os.remove(user_file)
