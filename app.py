@@ -1,12 +1,20 @@
 from flask import Flask, render_template_string, request, session, redirect
-import tempfile, json, os, sys, dotenv
+import tempfile, json, os, sys, dotenv, sqlite3, time
 from run_code import run_code_with_timeout
 
 app = Flask(__name__)
-dotenv.load_dotenv(".env")
-app.secret_key = os.getenv("WEBSERVER_SECRET")
+db = sqlite3.connect("results.db", check_same_thread=False)
+cursor = db.cursor()
 with open("problems.json", "r") as f:
     PROBLEMS = {p["id"]: p for p in json.load(f)}
+
+# load webserver secret
+dotenv.load_dotenv(".env")
+app.secret_key = os.getenv("WEBSERVER_SECRET")
+
+# create database submissions table, and student_status table, if they doesn't exist
+cursor.execute("CREATE TABLE IF NOT EXISTS submissions (username TEXT, problem_id TEXT, status TEXT, submission_id INTEGER)")
+cursor.execute("CREATE TABLE IF NOT EXISTS student_status (username TEXT UNIQUE, problems_solved INTEGER)")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -14,8 +22,11 @@ def login():
         name = request.form.get("name")
         if not name.strip():
             return "Enter a valid name."
-
+        
+        # insert name into the session and the database (ignore if it already exists)
         session["student_name"] = name.strip()
+        cursor.execute("INSERT OR IGNORE INTO student_status VALUES (?, ?)", (name.strip(), 0))
+        db.commit()
         return redirect("/")
 
     with open('html/login.html', 'r', encoding='utf-8') as file:
@@ -88,10 +99,15 @@ def problem(problem_id):
 
         result = "Accepted" if all_passed else "Wrong Answer"
         details = f"Submission by: {student}\n\n" + "\n\n".join(details_lines)
+        submissionId = int(time.time())
         
-        # save submission to log (will be updated to use database)
+        # save submission to database
         with open("submissions.log", "a") as f:
-            f.write(f"{student} | {problem_id} | RESULT: {result}\n")
+            #f.write(f"{student} | {problem_id} | RESULT: {result}\n")
+            cursor.execute("INSERT INTO submissions VALUES (?, ?, ?, ?)", (student, problem_id, result, submissionId))
+            if result == "Accepted":
+                cursor.execute("UPDATE student_status SET problems_solved = problems_solved + 1 WHERE username = (?)", (student,))
+            db.commit()
 
         # remove temp file
         os.remove(user_file)
