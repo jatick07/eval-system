@@ -56,6 +56,24 @@ form textarea:focus {
     box-shadow: 0 0 0 3px rgba(9,132,227,0.2);
 }
 
+select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #dcdde1;
+    font-size: 14px;
+    background: #ffffff;
+    cursor: pointer;
+    max-width: 200px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+select:focus {
+    border-color: #0984e3;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(9,132,227,0.2);
+}
+
 button {
     background: #0984e3;
     color: white;

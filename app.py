@@ -60,13 +60,15 @@ def problem(problem_id):
     code = ""
 
     if request.method == "POST":
+        submissionId = int(time.time())
         code = request.form["code"]
+        language = request.form["language"]
 
         # save file temp
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as f:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=f".{language}") as f:
             f.write(code.encode())
             user_file = f.name
-
+        
         # load test cases
         with open(f"tests/{problem_id}.json") as f:
             data = json.load(f)
@@ -80,7 +82,8 @@ def problem(problem_id):
 
         # loop through test cases
         for i, t in enumerate(tests, start=1):
-            cmd = [sys.executable, user_file]
+            starter = {"py": "python", "cpp": "cpprun.bat", "js": "./node/node.exe"}
+            cmd = [starter[language], user_file]
             ret, out, err = run_code_with_timeout(cmd, t["input"], timeout)
 
             expected = t["output"]
@@ -92,14 +95,16 @@ def problem(problem_id):
             elif out_norm != expected:
                 all_passed = False
                 details_lines.append(
-                    f"Test {i}: Wrong Answer"#"\nInput:\n{t['input']}\nExpected:\n{expected}\nGot:\n{out_norm}"
+                    f"Test {i}: Wrong Answer"#Input:\n{t['input']}\nExpected:\n{expected}\nGot:\n{out_norm}"
                 )
             else:
                 details_lines.append(f"Test {i}: Accepted")
 
         result = "Accepted" if all_passed else "Wrong Answer"
-        details = f"Submission by: {student}\n\n" + "\n\n".join(details_lines)
-        submissionId = int(time.time())
+        details = f"Error: {err}\n" if err else result
+
+        with open("errors.log", 'a', encoding='utf-8') as f:
+            f.write(f"Submission ID: {submissionId}\nSubmitted by: {student}\n" + details)
         
         # save submission to database
         #with open("submissions.log", "a") as f:

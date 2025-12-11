@@ -50,6 +50,12 @@
             <h3> Submit your solution </h3>
             <div class="submission-container">
                 <form method="POST">
+                    <label for="language">Language:</label>
+                    <select name="language" id="language">
+                        <option value="py">Python</option>
+                        <option value="js">JavaScript</option>
+                        <option value="cpp">C++</option>
+                    </select>
                     <textarea name="code">{{ code or "" }}</textarea><br><br>
                     <button type="submit">Submit</button>
                 </form>
