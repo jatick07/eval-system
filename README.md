@@ -13,7 +13,7 @@ Currently it supports:
 
 Start by cloning the repository
 ```bash
-  git clone https://github.com/jatick07/phs-eval-system.git
+  git clone https://github.com/jatick07/eval-system.git
 ```
 or downloading the source code zip file
 
@@ -29,7 +29,7 @@ The project already includes 2 essential batch files that can be used to set it 
 - You can download the latest version from https://nodejs.org/en/download
 - When you download it, make sure the file structure is as follows:
 ```
-phs-eval-system
+eval-system
 └───node
     ├───node_modules
     ├───...
@@ -41,7 +41,7 @@ phs-eval-system
 - You can download the latest version from https://github.com/brechtsanders/winlibs_mingw/releases/
 - When you download it, make sure the file structure is as follows:
 ```
-phs-eval-system
+eval-system
 └───mingw
     ├───bin
     │   ├───g++.exe
