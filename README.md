@@ -1,5 +1,5 @@
 
-# PHS Judging and Evaluation System
+# Judging and Evaluation System
 
 This is a versatile auto-judge webserver and system that can be used to host LAN problem-solving competitions.
 
